@@ -1,3 +1,4 @@
+import os
 from typing import Callable
 
 import flet as ft
@@ -104,4 +105,15 @@ def main(page: ft.Page):
 
 
 if __name__ == "__main__":
-    ft.run(main, assets_dir="assets")
+    # Render and Cloud Run automatically set the PORT environment variable.
+    # Local desktop and Android (.aab) builds do not.
+    if "PORT" in os.environ:
+        ft.run(
+            main,
+            assets_dir="assets",
+            view=ft.AppView.WEB_BROWSER,
+            host="0.0.0.0",
+            port=int(os.environ["PORT"]),
+        )
+    else:
+        ft.run(main, assets_dir="assets")
